@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Chamados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+        }
+        .container {
+            width: 400px;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #007bff;
+        }
+        label, input, textarea, select {
+            width: 100%;
+            margin-bottom: 10px;
+        }
+        button {
+            width: 100%;
+            background-color: #007bff;
+            color: white;
+            border: none;
+            padding: 10px;
+            cursor: pointer;
+            border-radius: 4px;
+        }
+        button:hover {
+            background-color: #0056b3;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 150px;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="logo.png" alt="Logo da Empresa" class="logo">
+    <h2>Abrir Chamado</h2>
+    <form id="chamadoForm">
+        <label for="nome">Nome</label>
+        <input type="text" id="nome" placeholder="Seu Nome" required>
+
+        <label for="setor">Setor</label>
+        <input type="text" id="setor" placeholder="Setor" required>
+
+        <label for="telefone">Telefone</label>
+        <input type="text" id="telefone" placeholder="telefone" required>
+
+        <label for="problema">Descrição do Problema</label>
+        <textarea id="problema" placeholder="Descreva o problema" required></textarea>
+
+        <label for="prioridade">Prioridade</label>
+        <select id="prioridade" required>
+            <option value="Baixa">Baixa</option>
+            <option value="Média">Média</option>
+            <option value="Alta">Alta</option>
+        </select>
+
+        <button type="submit">Enviar Chamado</button>
+    </form>
+</div>
+
+<script>
+    document.getElementById('chamadoForm').addEventListener('submit', function(event) {
+        event.preventDefault();
+
+        let nome = document.getElementById('nome').value;
+        let setor = document.getElementById('setor').value;
+        let problema = document.getElementById('problema').value;
+        let prioridade = document.getElementById('prioridade').value;
+
+        let chamados = JSON.parse(localStorage.getItem('chamados')) || [];
+
+        let novoChamado = {
+            id: Date.now(),
+            nome: nome,
+            setor: setor,
+            problema: problema,
+            prioridade: prioridade,
+            finalizado: false
+        };
+
+        chamados.push(novoChamado);
+        localStorage.setItem('chamados', JSON.stringify(chamados));
+
+        alert('Chamado enviado com sucesso!');
+        document.getElementById('chamadoForm').reset();
+    });
+</script>
+
+</body>
+</html>
