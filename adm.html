@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Admin - Chamados</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            background-color: #f4f4f4;
+            margin: 0;
+            padding: 0;
+            display: flex;
+            justify-content: center;
+            align-items: flex-start;
+            min-height: 100vh;
+            padding-top: 20px;
+        }
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        h2 {
+            text-align: center;
+            color: #007bff;
+        }
+        .logo {
+            display: block;
+            margin: 0 auto 20px;
+            max-width: 150px;
+        }
+        .columns {
+            display: flex;
+            justify-content: space-between;
+        }
+        .column {
+            width: 48%;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin-bottom: 20px;
+        }
+        table, th, td {
+            border: 1px solid #ddd;
+        }
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+        button {
+            background-color: #28a745;
+            color: white;
+            border: none;
+            padding: 5px 10px;
+            cursor: pointer;
+        }
+        button:hover {
+            background-color: #218838;
+        }
+        .finalizado {
+            text-decoration: line-through;
+            color: gray;
+        }
+        .header {
+            margin-bottom: 10px;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <img src="logo.png" alt="Logo da Empresa" class="logo">
+    <h2>Administração de Chamados</h2>
+    <div class="columns">
+        <div class="column">
+            <div class="header">
+                <h3>Chamados Abertos</h3>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Setor</th>
+                    <th>Problema</th>
+                    <th>Prioridade</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody id="chamadosAbertos">
+                </tbody>
+            </table>
+        </div>
+        <div class="column">
+            <div class="header">
+                <h3>Chamados Finalizados</h3>
+            </div>
+            <table>
+                <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Nome</th>
+                    <th>Setor</th>
+                    <th>Problema</th>
+                    <th>Prioridade</th>
+                    <th>Ação</th>
+                </tr>
+                </thead>
+                <tbody id="chamadosFinalizados">
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<script>
+    function carregarChamados() {
+        let chamados = JSON.parse(localStorage.getItem('chamados')) || [];
+
+        let tabelaAbertos = document.getElementById('chamadosAbertos');
+        let tabelaFinalizados = document.getElementById('chamadosFinalizados');
+        
+        tabelaAbertos.innerHTML = '';
+        tabelaFinalizados.innerHTML = '';
+
+        chamados.forEach((chamado) => {
+            let linha = `
+                <tr>
+                    <td>${chamado.id}</td>
+                    <td>${chamado.nome}</td>
+                    <td>${chamado.setor}</td>
+                    <td>${chamado.problema}</td>
+                    <td>${chamado.prioridade}</td>
+                    <td><button onclick="finalizarChamado(${chamado.id})">${chamado.finalizado ? 'Reabrir' : 'Finalizar'}</button></td>
+                </tr>
+            `;
+            if (chamado.finalizado) {
+                tabelaFinalizados.innerHTML += linha;
+            } else {
+                tabelaAbertos.innerHTML += linha;
+            }
+        });
+    }
+
+    function finalizarChamado(id) {
+        let chamados = JSON.parse(localStorage.getItem('chamados')) || [];
+        chamados = chamados.map((chamado) => {
+            if (chamado.id === id) {
+                chamado.finalizado = !chamado.finalizado;
+            }
+            return chamado;
+        });
+        localStorage.setItem('chamados', JSON.stringify(chamados));
+        carregarChamados();
+    }
+
+    window.onload = carregarChamados;
+</script>
+
+</body>
+</html>
